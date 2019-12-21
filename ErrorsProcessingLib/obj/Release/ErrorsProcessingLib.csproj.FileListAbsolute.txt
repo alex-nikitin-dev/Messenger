@@ -1,0 +1,6 @@
+D:\GDriveSpecowka\Develop\GOOD PROJECTS\Messenger\ErrorsProcessingLib\bin\Release\ErrorsProcessingLib.dll
+D:\GDriveSpecowka\Develop\GOOD PROJECTS\Messenger\ErrorsProcessingLib\bin\Release\ErrorsProcessingLib.pdb
+D:\GDriveSpecowka\Develop\GOOD PROJECTS\Messenger\ErrorsProcessingLib\obj\Release\ErrorsProcessingLib.csprojAssemblyReference.cache
+D:\GDriveSpecowka\Develop\GOOD PROJECTS\Messenger\ErrorsProcessingLib\obj\Release\ErrorsProcessingLib.csproj.CoreCompileInputs.cache
+D:\GDriveSpecowka\Develop\GOOD PROJECTS\Messenger\ErrorsProcessingLib\obj\Release\ErrorsProcessingLib.dll
+D:\GDriveSpecowka\Develop\GOOD PROJECTS\Messenger\ErrorsProcessingLib\obj\Release\ErrorsProcessingLib.pdb

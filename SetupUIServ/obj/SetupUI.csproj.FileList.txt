@@ -1,0 +1,17 @@
+bin\Release\SetupUI.exe
+bin\Release\SetupUI.pdb
+obj\Release\ResolveAssemblyReference.cache
+obj\Release\SetupUI.Properties.Resources.resources
+obj\Release\SetupUI.csproj.GenerateResource.Cache
+obj\Release\SetupUI.exe
+obj\Release\SetupUI.pdb
+obj\Release\SetupUI.Finish.resources
+obj\Release\SetupUI.SetupOption.resources
+obj\Release\SetupUI.SetupProgress.resources
+obj\Release\SetupUI.Welcome.resources
+obj\Release\SetupUI.MainForm.resources
+bin\Release\ShortcutLib.dll
+bin\Release\Interop.IWshRuntimeLibrary.dll
+bin\Release\ShortcutLib.pdb
+bin\Release\SetupParamsLib.dll
+bin\Release\SetupParamsLib.pdb

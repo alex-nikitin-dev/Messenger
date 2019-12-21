@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE dotfuscator SYSTEM "http://www.preemptive.com/dotfuscator/dtd/dotfuscator_v2.1.dtd">
+<dotfuscator version="2.1">
+  <!--This is application generated code. Do not edit manually.-->
+  <input>
+    <asmlist>
+      <inputassembly>
+        <file dir="H:\_HOME WORK\_C#\C#\Messenger\ClientConnectionLib\bin\Release" name="ClientConnectionLib.dll" />
+      </inputassembly>
+    </asmlist>
+  </input>
+  <output>
+    <file dir="${configdir}\Dotfuscated" />
+  </output>
+  <renaming>
+    <excludelist>
+      <type name="ClientConnectionLib.ClientConnection">
+        <method name="add_DisconnectEvent" signature="ClientConnectionLib.ClientConnection/Disconnect" />
+        <method name="add_Receive" signature="ClientConnectionLib.Receive" />
+        <method name="add_SendMessageEvent" signature="ClientConnectionLib.ClientConnection/MessageSend" />
+        <method name="Close" signature="" />
+        <method name="DoRead" signature="System.IAsyncResult" />
+        <method name="get_IsNowAttached" signature="" />
+        <method name="get_Port" signature="" />
+        <method name="get_ServerIp" signature="" />
+        <method name="MessagesGetString" signature="ClientConnectionLib.ClientConnection/MESSAGES" />
+        <method name="remove_DisconnectEvent" signature="ClientConnectionLib.ClientConnection/Disconnect" />
+        <method name="remove_Receive" signature="ClientConnectionLib.Receive" />
+        <method name="remove_SendMessageEvent" signature="ClientConnectionLib.ClientConnection/MessageSend" />
+        <method name="SendMessage" signature="ClientConnectionLib.ClientConnection/MESSAGES" />
+        <method name="SendMessage" signature="ClientConnectionLib.ClientConnection/MESSAGES,int32" />
+        <method name="SendMessage" signature="ClientConnectionLib.ClientConnection/MESSAGES,int32,string[]" />
+        <method name="SendMessage" signature="ClientConnectionLib.ClientConnection/MESSAGES,string[]" />
+        <method name="SendMessage" signature="string" />
+        <method name="SendMessage" signature="string,int32" />
+        <method name="set_IsNowAttached" signature="bool" />
+        <method name="ShutDown" signature="" />
+        <field name="_buffer" />
+        <field name="_client" />
+        <field name="_debug" />
+        <field name="_ip" />
+        <field name="_port" />
+        <field name="_SendDelay" />
+        <field name="_stream" />
+        <field name="BUFFER_SIZE" />
+        <field name="DisconnectEvent" />
+        <field name="isNowAttached" />
+        <field name="Receive" />
+        <field name="SendMessageEvent" />
+      </type>
+      <type name="ClientConnectionLib.ClientConnection/Disconnect" />
+      <type name="ClientConnectionLib.ClientConnection/DisconnectReason">
+        <field name="DEFAULT" />
+        <field name="SHUTDOWN" />
+        <field name="TERMINATE" />
+        <field name="value__" />
+      </type>
+      <type name="ClientConnectionLib.ClientConnection/MESSAGES">
+        <field name="ADD_CONTACT" />
+        <field name="CHAT" />
+        <field name="CONNECT" />
+        <field name="DISCONNECT" />
+        <field name="FIND_USER" />
+        <field name="GET_ALL_USERS" />
+        <field name="GET_BW" />
+        <field name="GET_BW_STATE" />
+        <field name="GET_EMAIL" />
+        <field name="GET_RPOFILE" />
+        <field name="LISTUSERS" />
+        <field name="MCHAT_ENTER" />
+        <field name="MCHAT_EXIT" />
+        <field name="PRIVATE" />
+        <field name="REGISTRATION" />
+        <field name="REGISTRATION_FAILED" />
+        <field name="REGISTRATION_FAILED_DEFAULT" />
+        <field name="REGISTRATION_FAILED_LOGIN_ALREADY_EXIST" />
+        <field name="REGISTRATION_PASSED" />
+        <field name="SERVER_LIFE" />
+        <field name="STATE" />
+        <field name="TO_BLACK" />
+        <field name="TO_WHITE" />
+        <field name="value__" />
+        <field name="YOU_LIFE" />
+      </type>
+      <type name="ClientConnectionLib.ClientConnection/MessageSend" />
+      <type name="ClientConnectionLib.Receive" />
+    </excludelist>
+    <mapping>
+      <mapoutput overwrite="false">
+        <file dir="${configdir}\Dotfuscated" name="Map.xml" />
+      </mapoutput>
+    </mapping>
+  </renaming>
+</dotfuscator>

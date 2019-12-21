@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="Messenger">
+</Property><Property Name="Solution File" Value="D:\_DEVELOPMENT AREA_\_CSharp\_USABLE PROJECTS\Messenger\Messenger.sln">
+</Property><Property Name="Date" Value="11 марта 2008 г.">
+</Property><Property Name="Time" Value="12:29">
+</Property></Properties><Event ErrorLevel="0" Project="Messenger Client" Source="Messenger Client\Messenger Client\Messenger Client.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="Messenger Client" Source="Messenger Client\Messenger Client\Messenger Client.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="ErrorsProcessingLib" Source="ErrorsProcessingLib\ErrorsProcessingLib.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="ErrorsProcessingLib" Source="ErrorsProcessingLib\ErrorsProcessingLib.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="MessengerServer" Source="MessengerServer\MessengerServer\MessengerServer.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="MessengerServer" Source="MessengerServer\MessengerServer\MessengerServer.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="ClientConnectionLib" Source="ClientConnectionLib\ClientConnectionLib.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="ClientConnectionLib" Source="ClientConnectionLib\ClientConnectionLib.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="ParametresLib" Source="ParametresLib\ParametresLib.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="ParametresLib" Source="ParametresLib\ParametresLib.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SetupUI" Source="SetupUI\SetupUI.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SetupUI" Source="SetupUI\SetupUI.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="ShortcutLib" Source="ShortcutLib\ShortcutLib.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="ShortcutLib" Source="ShortcutLib\ShortcutLib.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="Uninstaller" Source="Uninstaller\Uninstaller.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="Uninstaller" Source="Uninstaller\Uninstaller.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SetupParamsLib" Source="SetupParamsLib\SetupParamsLib.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SetupParamsLib" Source="SetupParamsLib\SetupParamsLib.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SetupUIServ" Source="SetupUIServ\SetupUIServ.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SetupUIServ" Source="SetupUIServ\SetupUIServ.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="Messenger.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="Messenger.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="Messenger Client" Source="Messenger Client\Messenger Client\Messenger Client.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="ErrorsProcessingLib" Source="ErrorsProcessingLib\ErrorsProcessingLib.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="MessengerServer" Source="MessengerServer\MessengerServer\MessengerServer.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="ClientConnectionLib" Source="ClientConnectionLib\ClientConnectionLib.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="ParametresLib" Source="ParametresLib\ParametresLib.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="SetupUI" Source="SetupUI\SetupUI.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="ShortcutLib" Source="ShortcutLib\ShortcutLib.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="Uninstaller" Source="Uninstaller\Uninstaller.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="SetupParamsLib" Source="SetupParamsLib\SetupParamsLib.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="SetupUIServ" Source="SetupUIServ\SetupUIServ.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>

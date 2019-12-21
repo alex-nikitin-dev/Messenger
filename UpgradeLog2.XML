@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="Messenger">
+</Property><Property Name="Solution File" Value="D:\_DEVELOPMENT AREA_\_CSharp\_USABLE PROJECTS\Messenger\Messenger.sln">
+</Property><Property Name="User Options File" Value="D:\_DEVELOPMENT AREA_\_CSharp\_USABLE PROJECTS\Messenger\Messenger.suo">
+</Property><Property Name="Date" Value="30 июля 2008 г.">
+</Property><Property Name="Time" Value="5:38">
+</Property><Property Name="Log Number" Value="2">
+</Property></Properties><Event ErrorLevel="0" Project="" Source="Messenger.sln" Description="File successfully backed up as D:\_DEVELOPMENT AREA_\_CSharp\_USABLE PROJECTS\Messenger\Messenger.sln.old">
+</Event><Event ErrorLevel="0" Project="" Source="Messenger.suo" Description="File successfully backed up as D:\_DEVELOPMENT AREA_\_CSharp\_USABLE PROJECTS\Messenger\Messenger.suo.old">
+</Event><Event ErrorLevel="0" Project="Messenger Client" Source="Messenger Client\Messenger Client\Messenger Client.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Messenger Client" Source="Messenger Client\Messenger Client\Messenger Client.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="ErrorsProcessingLib" Source="ErrorsProcessingLib\ErrorsProcessingLib.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="ErrorsProcessingLib" Source="ErrorsProcessingLib\ErrorsProcessingLib.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="MessengerServer" Source="MessengerServer\MessengerServer\MessengerServer.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="MessengerServer" Source="MessengerServer\MessengerServer\MessengerServer.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="ClientConnectionLib" Source="ClientConnectionLib\ClientConnectionLib.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="ClientConnectionLib" Source="ClientConnectionLib\ClientConnectionLib.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="ParametresLib" Source="ParametresLib\ParametresLib.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="ParametresLib" Source="ParametresLib\ParametresLib.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="XInstaller" Source="XInstaller\XInstaller\XInstaller.vcproj" Description="Web deployment to the local IIS server is no longer supported. The Web Deployment build tool has been removed from your project settings.">
+</Event><Event ErrorLevel="1" Project="XInstaller" Source="XInstaller\XInstaller\XInstaller.vcproj" Description="This application has been updated to include settings related to the User Account Control (UAC) feature of Windows Vista. By default, when run on Windows Vista with UAC enabled, this application is marked to run with the same privileges as the process that launched it. This marking also disables the application from running with virtualization. You can change UAC related settings from the Property Pages of the project.">
+</Event><Event ErrorLevel="0" Project="XInstaller" Source="XInstaller\XInstaller\XInstaller.vcproj" Description="Project file successfully backed up as 'D:\_DEVELOPMENT AREA_\_CSharp\_USABLE PROJECTS\Messenger\XInstaller\XInstaller\XInstaller.vcproj.8.00.old'.">
+</Event><Event ErrorLevel="0" Project="XInstaller" Source="XInstaller\XInstaller\XInstaller.vcproj" Description="Project upgraded successfully.">
+</Event><Event ErrorLevel="3" Project="XInstaller" Source="XInstaller\XInstaller\XInstaller.vcproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SetupUI" Source="SetupUI\SetupUI.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="SetupUI" Source="SetupUI\SetupUI.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="ShortcutLib" Source="ShortcutLib\ShortcutLib.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="ShortcutLib" Source="ShortcutLib\ShortcutLib.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Uninstaller" Source="Uninstaller\Uninstaller.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Uninstaller" Source="Uninstaller\Uninstaller.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="SetupParamsLib" Source="SetupParamsLib\SetupParamsLib.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="SetupParamsLib" Source="SetupParamsLib\SetupParamsLib.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="SetupUIServ" Source="SetupUIServ\SetupUIServ.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="SetupUIServ" Source="SetupUIServ\SetupUIServ.csproj" Description="No Conversion Required">
+</Event></UpgradeLog>

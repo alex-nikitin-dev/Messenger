@@ -1,0 +1,6 @@
+D:\GDriveSpecowka\Develop\GOOD PROJECTS\Messenger\ServerExceptionLib\bin\Release\ServerExceptionLib.dll
+D:\GDriveSpecowka\Develop\GOOD PROJECTS\Messenger\ServerExceptionLib\bin\Release\ServerExceptionLib.pdb
+D:\GDriveSpecowka\Develop\GOOD PROJECTS\Messenger\ServerExceptionLib\obj\Release\ServerExceptionLib.csprojAssemblyReference.cache
+D:\GDriveSpecowka\Develop\GOOD PROJECTS\Messenger\ServerExceptionLib\obj\Release\ServerExceptionLib.csproj.CoreCompileInputs.cache
+D:\GDriveSpecowka\Develop\GOOD PROJECTS\Messenger\ServerExceptionLib\obj\Release\ServerExceptionLib.dll
+D:\GDriveSpecowka\Develop\GOOD PROJECTS\Messenger\ServerExceptionLib\obj\Release\ServerExceptionLib.pdb
