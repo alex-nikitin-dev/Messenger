@@ -14,6 +14,7 @@ using MessengerServer.UsersDataSetTableAdapters;
 using ServerExceptionLib;
 using ServerInterfaceLib;
 using TextOperations;
+using MessengerServer.Services;
 using AccountTableAdapter = MessengerServer.UserDataSetTableAdapters.AccountTableAdapter;
 using BanReasonsTableAdapter = MessengerServer.UserDataSetTableAdapters.BanReasonsTableAdapter;
 using CCMessages = ClientConnectionLib.ClientConnection.Messages;
@@ -361,6 +362,7 @@ public partial class MainForm : Form
         private readonly Dictionary<string, UserConnection> _mainChatUsers = new();
         private readonly Dictionary<string, UserConnection> _attachedUsers = new();
         private readonly IMessageService _messageService;
+        private readonly RegistrationService _registrationService;
 
         private readonly UserDataSet.AccountDataTable _accountTable = new UserDataSet.AccountDataTable();
         private readonly AccountTableAdapter _accountAdapter = new AccountTableAdapter();
@@ -382,6 +384,7 @@ public partial class MainForm : Form
             _debug = true;
 #endif
             _messageService = new MessageService(_mainChatUsers, _attachedUsers);
+            _registrationService = new RegistrationService(_accountTable, _accountAdapter, _blackTable, _blackAdapter);
         }
 
         #endregion
@@ -2022,148 +2025,18 @@ public partial class MainForm : Form
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        private bool VerifyData(string[] data)
-        {
-            try
-            {
-                var rName = new Regex(@"^[A-Za-zА-Яа-я-]+$");
-                var rMail = new Regex(@"^[^ @]+@[^ @]+\.[^ \.@]+$");
+        private bool VerifyData(string[] data) =>
+            _registrationService.VerifyData(data);
 
-                //MessageBox.Show(String.Join("***",data));
+        private RegistrationService.AddAccountError AddNewAccount(string[] data, IPAddress ip) =>
+            _registrationService.AddNewAccount(data, ip);
 
-                for (var i = 0; i < UserData_RowCount; i++)
-                    switch ((UserData) i)
-                    {
-                        case UserData.Login:
-                            if (_Text.IsEmpty(data[i])) return false;
-                            data[i] = _Text.Normalize(data[i]);
-                            break;
-                        case UserData.Password:
-                            if (data[i].Length < 6) return false;
-                            break;
-                        case UserData.Firstname:
-                            if (rName.Matches(data[i]).Count == 0) return false;
-                            break;
-                        case UserData.Lastname:
-                            if (rName.Matches(data[i]).Count == 0) return false;
-                            break;
-                        case UserData.Email:
-                            if (rMail.Matches(data[i]).Count == 0) return false;
-                            break;
-                        case UserData.Description:
-                            if (data[i] == null) return false;
-                            break;
-                    }
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                ReportAnError(e, "VerifyData");
-                return false;
-            }
-        }
-
-        public enum AddAccountError
-        {
-            NoProblem,
-            LoginAlreadyExist,
-            DatabaseException
-        }
-
-        private AddAccountError AddNewAccount(string[] data, IPAddress ip)
-        {
-            var findRes = FindUserId(data[0]);
-
-            if (findRes > -1) return AddAccountError.LoginAlreadyExist;
-            if (findRes == -2) return AddAccountError.DatabaseException;
-
-            try
-            {
-                var bt = new UserDataSet.BanReasonsDataTable();
-
-                var br = bt.NewBanReasonsRow();
-                br.Reason = "";
-
-                var hashed = PasswordHelper.HashPassword(data[1]);
-
-                var row = _accountTable.AddAccountRow(data[0],
-                    hashed,
-                    data[2],
-                    data[3],
-                    data[4],
-                    data[5],
-                    false,
-                    DateTime.Now,
-                    ip.ToString(),
-                    false,
-                    br
-                );
-
-                _accountAdapter.Update(_accountTable);
-
-                // по умолчанию Другие должны входить в чёрный список
-                _blackTable.AddBlackRow(row.Id, 1);
-
-
-                _blackAdapter.Update(_blackTable);
-
-                return AddAccountError.NoProblem;
-            }
-            catch (Exception e)
-            {
-                ReportAnError(e, "AddNewAccount");
-                return AddAccountError.DatabaseException;
-            }
-        }
-
-        private AddAccountError EditAccount(UserConnection sender, UserConnection user)
-        {
-            try
-            {
-                var row = _accountTable.FindById(user.Id);
-
-                row.Login = sender.DataArray[0];
-                row.Password = PasswordHelper.HashPassword(sender.DataArray[1]);
-                row.Firstname = sender.DataArray[2];
-                row.Lastname = sender.DataArray[3];
-                row.Email = sender.DataArray[4];
-                row.Description = sender.DataArray[5];
-
-                //AccountTable.AcceptChanges();
-                _accountAdapter.Update(_accountTable);
-                return AddAccountError.NoProblem;
-            }
-            catch (Exception e)
-            {
-                ReportAnError(e, "AddNewAccount");
-                return AddAccountError.DatabaseException;
-            }
-        }
+        private RegistrationService.AddAccountError EditAccount(UserConnection sender, UserConnection user) =>
+            _registrationService.EditAccount(user.Id, sender.DataArray);
 
         #region FindUser
 
-        /// <summary>
-        ///     -1, если не нашел и -2 если ошибка перечисления
-        /// </summary>
-        /// <param name="login"></param>
-        /// <returns></returns>
-        private int FindUserId(string login)
-        {
-            try
-            {
-                foreach (UserDataSet.AccountRow row in _accountTable.Rows)
-                    if (String.Compare(row.Login, login, StringComparison.OrdinalIgnoreCase) == 0)
-                        return row.Id;
-
-                return -1;
-            }
-            catch (Exception e)
-            {
-                ReportAnError(e, "FindUserId");
-                return -2;
-            }
-        }
+        private int FindUserId(string login) => _registrationService.FindUserId(login);
 
 /*
         /// <summary>
@@ -2200,7 +2073,7 @@ public partial class MainForm : Form
             {
                 var senderUser = (ArrayList) parameter;
                 var sender = (UserConnection) senderUser[0];
-                var res = AddAccountError.NoProblem;
+                var res = RegistrationService.AddAccountError.NoProblem;
 
                 if (senderUser.Count == 2)
                 {
@@ -2225,13 +2098,13 @@ public partial class MainForm : Form
                 }
 
                 ///////////////////Обработка ошибок///////////////////////
-                if (res == AddAccountError.LoginAlreadyExist)
+                if (res == RegistrationService.AddAccountError.LoginAlreadyExist)
                 {
                     SendRegistrationFailed(sender, Reason.LoginAlreadyExist);
                     return;
                 }
 
-                if (res == AddAccountError.DatabaseException)
+                if (res == RegistrationService.AddAccountError.DatabaseException)
                 {
                     SendRegistrationFailed(sender, Reason.Default);
                     return;
