@@ -19,10 +19,10 @@ using BanReasonsTableAdapter = MessengerServer.UserDataSetTableAdapters.BanReaso
 using CCMessages = ClientConnectionLib.ClientConnection.Messages;
 using State = ClientConnectionLib.MessageHelper.State;
 
-namespace MessengerServer
+namespace MessengerServer;
+
+public partial class MainForm : Form
 {
-    public partial class MainForm : Form
-    {
         #region Нажатия клавиш
 
         #region Окно ввода текста
@@ -368,6 +368,8 @@ namespace MessengerServer
 
         private readonly BlackTableAdapter _blackAdapter = new BlackTableAdapter();
         private readonly UserDataSet.BlackDataTable _blackTable = new UserDataSet.BlackDataTable();
+
+        private readonly ServerListener _serverListener = new();
 
       
 
@@ -835,77 +837,31 @@ namespace MessengerServer
 
         #endregion
 
-        #region Сетевое взаимодействие
-
-        private Thread _listenerThread;
-        private TcpListener _listener;
-        private const int Port = 1100;
-
-        private bool _stopListener;
+        #region Networking
+        // ReSharper disable once CollectionNeverQueried.Local
+        private readonly List<UserConnection> _clients = new();
 
         private void StartListener()
         {
-            _stopListener = false;
-            _listenerThread = new Thread(DoListen);
-            _listenerThread.Start();
-
+            _serverListener.ClientAccepted += OnClientAccepted;
+            _serverListener.ListenerException += e => ReportAnErrorEx(e, nameof(ServerListener));
+            _serverListener.Start();
             ChatAddComment("listener is started");
         }
 
         private void StopListener()
         {
-            _stopListener = true;
-            _listener?.Stop();
-            _listenerThread?.Join(1000);
+            _serverListener.Stop();
         }
 
-        // ReSharper disable once CollectionNeverQueried.Local
-        private readonly List<UserConnection> _clients = new List<UserConnection>();
-
-        private void DoListen()
+        private void OnClientAccepted(UserConnection client)
         {
-            try
-            {
-                _listener = new TcpListener(IPAddress.Any, Port);
-                _listener.Start();
-                while (!_stopListener)
-                {
-                    try
-                    {
-                        var tcpClient = _listener.AcceptTcpClient();
-                        var client = new UserConnection(tcpClient);
-
-                        client.Receive += OnClientReceive;
-                        client.DisconnectEvent += OnDisconnectUser;
-                        client.SendMessageEvent += OnUserMessageSend;
-                        client.ReplaceUserIpEvent += OnUserReplaceIp;
-                        _clients.Add(client);
-                        ChatAddComment("Принято новое соединение");
-                    }
-                    catch (SocketException)
-                    {
-                        if (_stopListener) break;
-                        throw;
-                    }
-                    catch (ServerException e)
-                    {
-                        ReportAnError(e, "DoListen");
-                        ReportAnError();
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                if (_stopListener) return;
-
-                ReportAnError(e, "DoListen");
-
-#if DEBUG
-                MessageBox.Show(@"Вышел из цикла в методе DoListen  class MainForm in MainForm.cs");
-#else
-                //Alarm.Sound(Alarm.LevelError.Fatal);
-#endif
-            }
+            client.Receive += OnClientReceive;
+            client.DisconnectEvent += OnDisconnectUser;
+            client.SendMessageEvent += OnUserMessageSend;
+            client.ReplaceUserIpEvent += OnUserReplaceIp;
+            _clients.Add(client);
+            ChatAddComment("Accepted new connection");
         }
 
         private void OnUserReplaceIp(UserConnection sender, string oldIp, string newIp)
@@ -2388,6 +2344,7 @@ namespace MessengerServer
                     SayToAllUsers(sender);
                 }
 
+                _serverListener.Remove(sender);
                 _clients.Remove(sender);
             }
             catch (Exception e)
@@ -2545,4 +2502,3 @@ namespace MessengerServer
 
         #endregion
     }
-}
