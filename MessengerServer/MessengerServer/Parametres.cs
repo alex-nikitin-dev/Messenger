@@ -69,28 +69,17 @@ namespace MessengerServer
         {
             try
             {
-                FileStream fs = null;
-                while (fs == null)
+                if (!File.Exists(_path))
                 {
-                    try
-                    {
-                        fs = new FileStream(_path, FileMode.Open, FileAccess.Read);
-                    }
-                    catch (FileNotFoundException e)
-                    {
-                        ErrorsProc.WriteErrorAndMessage(e, "Load in Parametres.cs", false);
-
-                        Parametres prm = new Parametres(ParamsDefault);
-
-                        prm.Save();
-
-                    }
+                    ErrorsProc.WriteErrorAndMessage(new FileNotFoundException(_path), "Load in Parametres.cs", false);
+                    var prm = new Parametres(ParamsDefault);
+                    prm.Save();
                 }
-                BinaryFormatter bf = new BinaryFormatter();
+
+                using var fs = new FileStream(_path, FileMode.Open, FileAccess.Read);
+                var bf = new BinaryFormatter();
 
                 ParamsStruct result = (ParamsStruct)bf.Deserialize(fs);
-
-                fs.Close();
 
                 return result;
             }

@@ -217,12 +217,12 @@ namespace Messenger_Client
 
         private void ProgressThreadTerminate()
         {
-            if (_progressThread != null)
-                if (_progressThread.IsAlive)
-                {
-                    _progressThread.Abort();
-                    _progressThread = null;
-                }
+            _progressCancel = true;
+            if (_progressThread != null && _progressThread.IsAlive)
+            {
+                _progressThread.Join(200);
+                _progressThread = null;
+            }
         }
 
         private void connect_Receive(ClientConnection sender, string message)
@@ -463,6 +463,7 @@ namespace Messenger_Client
         {
             try
             {
+                _progressCancel = false;
                 _progressThread = new Thread(DoProgress);
                 _progressThread.Start();
 
@@ -653,18 +654,19 @@ namespace Messenger_Client
 
         private void DoProgress()
         {
-            while (true)
+            while (!_progressCancel)
             {
                 foreach (var item in _progressText)
                 {
+                    if (_progressCancel) break;
                     Progress.Text = item;
                     Thread.Sleep(150);
                 }
             }
-            // ReSharper disable once FunctionNeverReturns
         }
 
         private Thread _progressThread;
+        private volatile bool _progressCancel;
 
         #endregion
     }

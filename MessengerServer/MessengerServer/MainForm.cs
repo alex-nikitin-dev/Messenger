@@ -615,11 +615,7 @@ namespace MessengerServer
 
                 _cancelClose = false;
 
-                if (_listener != null)
-                {
-                    _listener.Stop();
-                    _listenerThread?.Abort();
-                }
+                StopListener();
 
                 _clients.Clear();
 
@@ -845,12 +841,22 @@ namespace MessengerServer
         private TcpListener _listener;
         private const int Port = 1100;
 
+        private bool _stopListener;
+
         private void StartListener()
         {
+            _stopListener = false;
             _listenerThread = new Thread(DoListen);
             _listenerThread.Start();
 
             ChatAddComment("listener is started");
+        }
+
+        private void StopListener()
+        {
+            _stopListener = true;
+            _listener?.Stop();
+            _listenerThread?.Join(1000);
         }
 
         // ReSharper disable once CollectionNeverQueried.Local
@@ -862,11 +868,12 @@ namespace MessengerServer
             {
                 _listener = new TcpListener(IPAddress.Any, Port);
                 _listener.Start();
-                do
+                while (!_stopListener)
                 {
                     try
                     {
-                        var client = new UserConnection(_listener.AcceptTcpClient());
+                        var tcpClient = _listener.AcceptTcpClient();
+                        var client = new UserConnection(tcpClient);
 
                         client.Receive += OnClientReceive;
                         client.DisconnectEvent += OnDisconnectUser;
@@ -875,16 +882,21 @@ namespace MessengerServer
                         _clients.Add(client);
                         ChatAddComment("Принято новое соединение");
                     }
+                    catch (SocketException)
+                    {
+                        if (_stopListener) break;
+                        throw;
+                    }
                     catch (ServerException e)
                     {
                         ReportAnError(e, "DoListen");
                         ReportAnError();
                     }
-                } while (true);
+                }
             }
             catch (Exception e)
             {
-                if (!_cancelClose && e.Message.IndexOf("Thread was being aborted", StringComparison.Ordinal) != -1) return;
+                if (_stopListener) return;
 
                 ReportAnError(e, "DoListen");
 
@@ -1236,19 +1248,23 @@ namespace MessengerServer
             {
                 ChatAddComment(sender, message);
                 var messSplit = message.Split('|');
+                if (messSplit.Length == 0) return;
+
                 switch (ClientConnectionLib.ClientConnection.GetMessage(messSplit[0]))
                 {
                     case CCMessages.CreateRoom:
-                        CreateRoom(sender, messSplit[1]);
+                        if (messSplit.Length > 1)
+                            CreateRoom(sender, messSplit[1]);
                         break;
                     case CCMessages.Connect:
-                        AuthorizeUser(messSplit[1], messSplit[2], sender);
+                        if (messSplit.Length > 2)
+                            AuthorizeUser(messSplit[1], messSplit[2], sender);
                         break;
                     //*************************************
                     //          Main chat
                     //*************************************
                     case CCMessages.Chat:
-                        if (sender.IsMChatActive)
+                        if (sender.IsMChatActive && messSplit.Length > 1)
                         {
                             UserSay(sender, messSplit[1]);
 
@@ -1271,32 +1287,41 @@ namespace MessengerServer
                         SendAllUsersList(sender);
                         break;
                     case CCMessages.FindUser:
-                        FindUsers(sender, messSplit);
+                        if (messSplit.Length > 1)
+                            FindUsers(sender, messSplit);
                         break;
                     case CCMessages.Disconnect:
                         sender.CloseConnection();
                         break;
                     case CCMessages.Registration:
-                        ChatAddWarning("User want to create new account");
-                        RegisterUser(messSplit, sender);
+                        if (messSplit.Length > 1)
+                        {
+                            ChatAddWarning("User want to create new account");
+                            RegisterUser(messSplit, sender);
+                        }
                         break;
                     case CCMessages.YouAlive:
                         sender.SendMessage(MessageHelper.Messages.ServerAlive);
                         break;
                     case CCMessages.GetProfile: //  login           password
-                        SendProfile(sender, messSplit[1], messSplit[2]);
+                        if (messSplit.Length > 2)
+                            SendProfile(sender, messSplit[1], messSplit[2]);
                         break;
                     case CCMessages.Private:
-                        PrivateProcessing(sender, messSplit);
+                        if (messSplit.Length > 1)
+                            PrivateProcessing(sender, messSplit);
                         break;
                     case CCMessages.AddContact:
-                        AddContact(sender, messSplit);
+                        if (messSplit.Length > 1)
+                            AddContact(sender, messSplit);
                         break;
                     case CCMessages.ToWhite:
-                        UsersToWhite(sender, messSplit);
+                        if (messSplit.Length > 1)
+                            UsersToWhite(sender, messSplit);
                         break;
-                    case CCMessages.ToBlack: 
-                        UsersToBlack(sender, messSplit);
+                    case CCMessages.ToBlack:
+                        if (messSplit.Length > 1)
+                            UsersToBlack(sender, messSplit);
                         break;
                     case CCMessages.GetBw:
                         SendBlackWhite(sender, _params.BwDelay);
@@ -1305,10 +1330,12 @@ namespace MessengerServer
                         Send_BW_State(sender, _params.BwDelay);
                         break;
                     case CCMessages.State:
-                        StateChange(sender, messSplit[1]);
+                        if (messSplit.Length > 1)
+                            StateChange(sender, messSplit[1]);
                         break;
                     case CCMessages.GetEmail:
-                        SendEmail(sender, messSplit[1]);
+                        if (messSplit.Length > 1)
+                            SendEmail(sender, messSplit[1]);
                         break;
                     default:
                         ChatAddString("Unknown message:" + message);
