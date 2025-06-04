@@ -1,13 +1,16 @@
-﻿using System;
+using System;
 
-namespace ServerExceptionLib
+namespace ServerExceptionLib;
+
+/// <summary>
+/// Custom exception for handling server side errors in a user friendly way.
+/// </summary>
+public class ServerException : ApplicationException
 {
-    public class ServerException: ApplicationException
-    {
-        private Error  _error;
-        private string _message;
+    private readonly Error _error;
+    private string _message = string.Empty;
 
-        public enum Error
+    public enum Error
         {
             NoProblem = -1,
             BadValue,
@@ -15,42 +18,31 @@ namespace ServerExceptionLib
             EmptyDataArray,
             WrongUserInit
         }
-        public new string Message => _message;
+    public new string Message => _message;
 
-        public ServerException(Error sendError)
-        {
-            _error = sendError;
-            SetMessage();
-        }
-        public ServerException(string sendError)
-        {
-            _message = sendError;
-        }
-        private void SetMessage()
-        {
-            switch (_error)
-            {
-                case Error.NoProblem:
-                    _message = "Проблем не обнаружено";
-                    break;
-                case Error.BadValue:
-                    _message = "Значение не соответствует требованиям";
-                    break;
-                case Error.EmptyUserName:
-                    _message = "Значение имени пользователя пустая строка. Пользователь не присоеденён";
-                    break;
-                case Error.EmptyDataArray:
-                    _message = "Массив данных не определён(null)";
-                    break;
-                case Error.WrongUserInit:
-                    _message = "Имя пользователя не существует в базе. Попытка присвоить несущетвующее имя в данном подключении";
-                    break;
-                    
-            }
-        }
-        private string GetMessage()
-        {
-            return Message;
-        }
+    public ServerException(Error sendError)
+    {
+        _error = sendError;
+        SetMessage();
     }
+
+    public ServerException(string sendError)
+    {
+        _message = sendError;
+    }
+
+    private void SetMessage()
+    {
+        _message = _error switch
+        {
+            Error.NoProblem => "No issues detected",
+            Error.BadValue => "Value does not meet requirements",
+            Error.EmptyUserName => "User name cannot be empty. User is not attached",
+            Error.EmptyDataArray => "Data array is null",
+            Error.WrongUserInit => "User name does not exist in the database for this connection",
+            _ => string.Empty
+        };
+    }
+
+    private string GetMessage() => Message;
 }
