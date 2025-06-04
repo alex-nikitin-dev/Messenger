@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Data.OleDb;
+using System.Data.Odbc;
 using System.Threading.Tasks;
 
 namespace MessengerServer.Data
@@ -17,11 +17,11 @@ namespace MessengerServer.Data
         public string IP { get; set; } = string.Empty;
     }
 
-    public class OleDbAccountRepository
+    public class OdbcAccountRepository
     {
         private readonly string _connectionString;
 
-        public OleDbAccountRepository(string connectionString)
+        public OdbcAccountRepository(string connectionString)
         {
             _connectionString = connectionString;
         }
@@ -30,8 +30,8 @@ namespace MessengerServer.Data
         {
             const string query =
                 "SELECT ID, Login, Password, FirstName, LastName, Email, Description, IP FROM Account WHERE Login = ?";
-            await using var connection = new OleDbConnection(_connectionString);
-            await using var command = new OleDbCommand(query, connection);
+            await using var connection = new OdbcConnection(_connectionString);
+            await using var command = new OdbcCommand(query, connection);
             command.Parameters.AddWithValue("@p1", login);
             await connection.OpenAsync();
             await using var reader = await command.ExecuteReaderAsync();
@@ -57,8 +57,8 @@ namespace MessengerServer.Data
         public async Task UpdateIpAsync(int id, string ip)
         {
             const string query = "UPDATE Account SET IP = ? WHERE ID = ?";
-            await using var connection = new OleDbConnection(_connectionString);
-            await using var command = new OleDbCommand(query, connection);
+            await using var connection = new OdbcConnection(_connectionString);
+            await using var command = new OdbcCommand(query, connection);
             command.Parameters.AddWithValue("@p1", ip);
             command.Parameters.AddWithValue("@p2", id);
             await connection.OpenAsync();
@@ -71,8 +71,8 @@ namespace MessengerServer.Data
         {
             const string query =
                 "SELECT A.Login FROM WhiteList W INNER JOIN Account A ON W.FriendID = A.ID WHERE W.LoginID = ?";
-            await using var connection = new OleDbConnection(_connectionString);
-            await using var command = new OleDbCommand(query, connection);
+            await using var connection = new OdbcConnection(_connectionString);
+            await using var command = new OdbcCommand(query, connection);
             command.Parameters.AddWithValue("@p1", userId);
             await connection.OpenAsync();
             await using var reader = await command.ExecuteReaderAsync();
@@ -91,8 +91,8 @@ namespace MessengerServer.Data
         {
             const string query =
                 "SELECT A.Login FROM BlackList B INNER JOIN Account A ON B.EnemyID = A.ID WHERE B.LoginID = ?";
-            await using var connection = new OleDbConnection(_connectionString);
-            await using var command = new OleDbCommand(query, connection);
+            await using var connection = new OdbcConnection(_connectionString);
+            await using var command = new OdbcCommand(query, connection);
             command.Parameters.AddWithValue("@p1", userId);
             await connection.OpenAsync();
             await using var reader = await command.ExecuteReaderAsync();

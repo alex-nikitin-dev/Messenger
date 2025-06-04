@@ -26,7 +26,7 @@ namespace MessengerServer.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=|DataDirectory|\\User.mdb")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=|DataDirectory|\\User.mdb;")]
         public string UserConnectionString {
             get {
                 return ((string)(this["UserConnectionString"]));
@@ -36,7 +36,7 @@ namespace MessengerServer.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=|DataDirectory|\\Users.accdb")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=|DataDirectory|\\Users.accdb;")]
         public string UsersConnectionString {
             get {
                 return ((string)(this["UsersConnectionString"]));
