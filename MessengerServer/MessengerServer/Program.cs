@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace MessengerServer
+namespace MessengerServer;
+
+static class Program
 {
-    static class Program
-    {
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -17,4 +17,3 @@ namespace MessengerServer
             Application.Run(new MainForm());
         }
     }
-}
