@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -7,14 +7,15 @@ using System.Runtime.Remoting;
 using System.Text;
 using System.Threading;
 using ServerParametresLib;
-using SE= ServerExceptionLib;
-namespace UserConnectionLib
-{
-    public delegate void Receive(UserConnection sender, string message);
+using SE = ServerExceptionLib;
 
-    public class UserConnection
-    {
-        #region Конструктор
+namespace UserConnectionLib;
+
+public delegate void Receive(UserConnection sender, string message);
+
+public class UserConnection
+{
+        #region Constructor
 
         public UserConnection(TcpClient client)
         {
@@ -44,7 +45,7 @@ namespace UserConnectionLib
 
         #endregion
 
-        #region поля и свойства
+        #region FieldsAndProperties
 
         public enum State
         {
@@ -62,9 +63,9 @@ namespace UserConnectionLib
 
         public State CurrentState { get; set; }
 
-        public ArrayList White { get; set; } = new ArrayList();
+        public List<string> White { get; set; } = new();
 
-        public ArrayList Black { get; set; } = new ArrayList();
+        public List<string> Black { get; set; } = new();
 
 
         private readonly byte[] _buffer = new byte[BufferSize];
@@ -113,7 +114,7 @@ namespace UserConnectionLib
 
         #endregion
 
-        #region взаимодействие с базой пользователей
+        #region DatabaseInteraction
 
         public delegate void ReplaceUserIp(UserConnection sender, string oldIp, string newIp);
 
@@ -170,7 +171,7 @@ namespace UserConnectionLib
             }
         }
 
-        #region Заполнение белого и чёрного списков
+        #region PopulateWhiteAndBlackLists
 
         /// <summary>
         ///     когда некогда разбираться с адаптарами :)
@@ -367,7 +368,7 @@ namespace UserConnectionLib
 
         #endregion
 
-        #region Сетевое взаимодействие
+        #region NetworkInteraction
 
         public void StreamReceiver(IAsyncResult ar)
         {
@@ -450,7 +451,7 @@ namespace UserConnectionLib
 
         #endregion
 
-        #region Отправка сообщений
+        #region MessageSending
 
         public delegate void MessageSend(UserConnection sender, string message);
 
@@ -511,7 +512,7 @@ namespace UserConnectionLib
             SendMessage(message);
         }
 
-        #region MESSAGES
+        #region Messages
 
         public enum Messages
         {
@@ -703,4 +704,3 @@ namespace UserConnectionLib
 
         #endregion
     }
-}

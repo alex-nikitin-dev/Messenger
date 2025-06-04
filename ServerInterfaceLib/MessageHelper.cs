@@ -1,104 +1,103 @@
 ﻿using System;
 
 
-namespace ServerInterfaceLib
+namespace ServerInterfaceLib;
+
+public static class MessageHelper
 {
-    public class MessageHelper
-    {
        
         public static string MessagesGetString(Messages message) => Enum.GetName(typeof(Messages), message);
         public static Messages GetMessages(string message) => (Messages) Enum.Parse(typeof(Messages), message);
-        public enum Messages
-        {
-            /// <summary>
-            ///  special server message
-            /// </summary>
-            Server,
-            /// <summary>
-            ///     сообщение юзеру что кто-то добавил его в контакты
-            /// </summary>
-            Alert,
+    public enum Messages
+    {
+        /// <summary>
+        /// Special server message.
+        /// </summary>
+        Server,
+        /// <summary>
+        /// Notifies a user that someone added them to contacts.
+        /// </summary>
+        Alert,
 
-            /// <summary>
-            ///     Авторизован и присоеденён
-            /// </summary>
-            Attached,
+        /// <summary>
+        /// User successfully authorised and attached.
+        /// </summary>
+        Attached,
 
-            /// <summary>
-            ///     сообщение для главного чата
-            /// </summary>
-            Chat,
+        /// <summary>
+        /// Message for the main chat.
+        /// </summary>
+        Chat,
 
-            /// <summary>
-            ///     список всех активных пользователей главного чата
-            /// </summary>
-            Listusers,
+        /// <summary>
+        /// List of all active users in the main chat.
+        /// </summary>
+        Listusers,
 
-            /// <summary>
-            ///     неудачная регистрация
-            /// </summary>
-            RegistrationFailed,
+        /// <summary>
+        /// Registration failed.
+        /// </summary>
+        RegistrationFailed,
 
-            /// <summary>
-            ///     неудачная регистрация по неопределённой причине
-            /// </summary>
-            RegistrationFailedDefault,
+        /// <summary>
+        /// Registration failed for an unspecified reason.
+        /// </summary>
+        RegistrationFailedDefault,
 
-            /// <summary>
-            ///     неудачная регистрация по причине совпадения логина.
-            ///     такой логин уже существует в базе
-            /// </summary>
-            RegistrationFailedLoginAlreadyExist,
+        /// <summary>
+        /// Registration failed because the login already exists.
+        /// </summary>
+        RegistrationFailedLoginAlreadyExist,
 
-            /// <summary>
-            ///     ошибка формирования пакета данных на клиенте
-            /// </summary>
-            RegistrationVerifydataError,
+        /// <summary>
+        /// Error forming the registration data packet on the client.
+        /// </summary>
+        RegistrationVerifydataError,
 
-            /// <summary>
-            ///     на сервер пришло ошибочное сообщение
-            /// </summary>
-            Refuse,
+        /// <summary>
+        /// The server received an invalid message.
+        /// </summary>
+        Refuse,
 
-            /// <summary>
-            ///     попытка повторной авторизации
-            /// </summary>
-            WasAttached,
+        /// <summary>
+        /// Attempt to authorize a user who is already connected.
+        /// </summary>
+        WasAttached,
 
-            /// <summary>
-            ///     попытка повторной регистрации в главном чате
-            /// </summary>
-            WasRegister,
+        /// <summary>
+        /// Attempted to re-register in the main chat.
+        /// </summary>
+        WasRegister,
 
-            /// <summary>
-            ///     регистрация прошла успешно(в базу добавлена запись)
-            /// </summary>
-            RegistrationPassed,
+        /// <summary>
+        /// Registration completed successfully.
+        /// </summary>
+        RegistrationPassed,
 
-            /// <summary>
-            ///     пользователь потерян(в случае дисконнекта)
-            /// </summary>
-            Userlost,
+        /// <summary>
+        /// User was lost due to disconnect.
+        /// </summary>
+        Userlost,
 
-            /// <summary>
-            ///     успешно вошел в главный чат
-            /// </summary>
-            MchatEnterPassed,
+        /// <summary>
+        /// Successfully joined the main chat.
+        /// </summary>
+        MchatEnterPassed,
 
-            /// <summary>
-            ///     вышел из чата
-            /// </summary>
-            MchatExit,
+        /// <summary>
+        /// Left the main chat.
+        /// </summary>
+        MchatExit,
 
-            /// <summary>
-            ///     невозможно войти т.к. ошибка сервера
-            /// </summary>
-            MchatEnterFailed,
+        /// <summary>
+        /// Unable to join due to server error.
+        /// </summary>
+        MchatEnterFailed,
 
-            /// <summary>
-            ///     ответ сервера что он действует
-            /// </summary>
-            ServerAlive,
+        /// <summary>
+        /// Reply from the server that it is running.
+        /// </summary>
+        ServerAlive,
             AutorizeFailedWrongPassword,
             AutorizeFailedNotRegistered,
             AutorizeFailedServerError,
@@ -118,79 +117,78 @@ namespace ServerInterfaceLib
             ///     отправка списка всех зарегистрированных пользователей
             ///     в ответ на запрос GET_ALL_USERS
             /// </summary>
-            ListAllUsers,
+        ListAllUsers,
 
-            /// <summary>
-            ///     успешное добавление в белый список
-            /// </summary>
-            WhiteAddPass,
+        /// <summary>
+        /// Successfully added to the white list.
+        /// </summary>
+        WhiteAddPass,
 
-            /// <summary>
-            ///     ошибка при добавлении в белый список
-            /// </summary>
-            WhiteAddError,
+        /// <summary>
+        /// Error while adding to the white list.
+        /// </summary>
+        WhiteAddError,
 
-            /// <summary>
-            ///     добавление невозможно т.к. такой пользователь уже есть в списке
-            /// </summary>
-            WhiteAddWrong,
+        /// <summary>
+        /// Adding failed because the user is already in the list.
+        /// </summary>
+        WhiteAddWrong,
 
-            /// <summary>
-            ///     добавление невозможно т.к. такой пользователь уже есть в списке
-            /// </summary>
-            BlackAddWrong,
+        /// <summary>
+        /// Adding to the black list failed because the user already exists.
+        /// </summary>
+        BlackAddWrong,
 
-            /// <summary>
-            ///     успешное добавление в чёрный список
-            /// </summary>
-            BlackAddPass,
+        /// <summary>
+        /// Successfully added to the black list.
+        /// </summary>
+        BlackAddPass,
 
-            /// <summary>
-            ///     ошибка при добавлении в чёрный список
-            /// </summary>
-            BlackAddError,
-            WhiteList,
-            BlackList,
+        /// <summary>
+        /// Error while adding to the black list.
+        /// </summary>
+        BlackAddError,
+        WhiteList,
+        BlackList,
 
-            /// <summary>
-            ///     ошибка при отправке черного и белого списков
-            /// </summary>
-            GetBwError,
+        /// <summary>
+        /// Error sending black and white lists.
+        /// </summary>
+        GetBwError,
 
-            /// <summary>
-            ///     отправка черного и белого списков завершена
-            /// </summary>
-            SendBwFinished,
+        /// <summary>
+        /// Finished sending black and white lists.
+        /// </summary>
+        SendBwFinished,
 
-            /// <summary>
-            ///     отправка состояний из белого  спискa
-            /// </summary>
-            WhiteUserState,
+        /// <summary>
+        /// Sending state information for users in the white list.
+        /// </summary>
+        WhiteUserState,
 
-            /// <summary>
-            ///     отправка состояний из  чёрного спискa
-            /// </summary>
-            BlackUserState,
+        /// <summary>
+        /// Sending state information for users in the black list.
+        /// </summary>
+        BlackUserState,
 
-            /// <summary>
-            ///     отправка состояний черного и белого списков завершена
-            /// </summary>
-            SendBwUserStateFinished,
-            Disconnect,
-            AddContactPass,
-            AddContactWrong,
+        /// <summary>
+        /// Finished sending states for black and white lists.
+        /// </summary>
+        SendBwUserStateFinished,
+        Disconnect,
+        AddContactPass,
+        AddContactWrong,
 
-            /// <summary>
-            ///     личное сообщение: fromUser,message,colorName,fontName,fontSize
-            /// </summary>
-            Private,
-            Email,
+        /// <summary>
+        /// Private message: fromUser,message,colorName,fontName,fontSize
+        /// </summary>
+        Private,
+        Email,
 
-            /// <summary>
-            ///     ошибка при получении адреса почты
-            /// </summary>
-            EmailAps,
-            MchatBan
-        }
+        /// <summary>
+        /// Error retrieving the email address.
+        /// </summary>
+        EmailAps,
+        MchatBan
     }
 }
