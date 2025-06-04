@@ -27,7 +27,7 @@ public partial class MainForm : Form
 
         #region Окно ввода текста
 
-        private void MessageText_KeyDown(object sender, KeyEventArgs e)
+        private void OnMessageTextKeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter && e.Control)
             {
@@ -48,40 +48,40 @@ public partial class MainForm : Form
 
         #endregion
 
-        private void ChatContext_Closed(object sender, ToolStripDropDownClosedEventArgs e)
+        private void OnChatContextClosed(object sender, ToolStripDropDownClosedEventArgs e)
         {
             CC_NIK.Visible = false;
             CC_SEP.Visible = false;
             CC_NikToChat.Visible = false;
         }
 
-        private void CC_NikToChat_Click(object sender, EventArgs e)
+        private void OnNikToChatClick(object sender, EventArgs e)
         {
             MessageText.AppendText(CC_NIK.Text + ":");
         }
 
-        private void CC_Clear_Click(object sender, EventArgs e)
+        private void OnClearClick(object sender, EventArgs e)
         {
             Chat.Clear();
         }
 
-        private void CC_Expand_Click(object sender, EventArgs e)
+        private void OnExpandClick(object sender, EventArgs e)
         {
             CC_Expand.Text = ChatUsrLstContainer.Panel2Collapsed ? @"Спрятать список пользователей" : @"Показать список пользователей";
             ChatUsrLstContainer.Panel2Collapsed = !ChatUsrLstContainer.Panel2Collapsed;
         }
 
-        private void CC_AutoScroll_Click(object sender, EventArgs e)
+        private void OnAutoScrollClick(object sender, EventArgs e)
         {
             CC_AutoScroll.Checked = !CC_AutoScroll.Checked;
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OnAboutClick(object sender, EventArgs e)
         {
             new AboutBox().ShowDialog();
         }
 
-        private void Ban_Delete_Click(object sender, EventArgs e)
+        private void OnBanDeleteClick(object sender, EventArgs e)
         {
             if (BanView.SelectedItems.Count != 0)
             {
@@ -136,7 +136,7 @@ public partial class MainForm : Form
             }
         }
 
-        private void Ban_Set_ByIP_Click(object sender, EventArgs e)
+        private void OnBanByIpClick(object sender, EventArgs e)
         {
             if (BanView.SelectedItems.Count != 0)
             {
@@ -188,7 +188,7 @@ public partial class MainForm : Form
             }
         }
 
-        private void Ban_AddUser_Click(object sender, EventArgs e)
+        private void OnBanAddUserClick(object sender, EventArgs e)
         {
             var bf = new BanForm();
             bf.ShowDialog();
@@ -197,7 +197,7 @@ public partial class MainForm : Form
             BanViewUpdate();
         }
 
-        private void Ban_Edit_Click(object sender, EventArgs e)
+        private void OnBanEditClick(object sender, EventArgs e)
         {
             if (BanView.SelectedItems.Count != 0)
             {
@@ -214,7 +214,7 @@ public partial class MainForm : Form
             }
         }
 
-        private void MCLC_Ban_Click(object sender, EventArgs e)
+        private void OnMclcBanClick(object sender, EventArgs e)
         {
             if (MChatUserView.SelectedItems.Count != 0)
             {
@@ -359,6 +359,7 @@ public partial class MainForm : Form
 
         private readonly Hashtable _mainChatUsers = new Hashtable();
         private readonly Hashtable _attachedUsers = new Hashtable();
+        private readonly MessageService _messageService;
 
         private readonly UserDataSet.AccountDataTable _accountTable = new UserDataSet.AccountDataTable();
         private readonly AccountTableAdapter _accountAdapter = new AccountTableAdapter();
@@ -379,6 +380,7 @@ public partial class MainForm : Form
 #if DEBUG
             _debug = true;
 #endif
+            _messageService = new MessageService(_mainChatUsers, _attachedUsers);
         }
 
         #endregion
@@ -613,7 +615,7 @@ public partial class MainForm : Form
 
             if (res == DialogResult.Yes)
             {
-                SendMessageAllAttached(MessageHelper.Messages.Disconnect, "");
+                _messageService.Broadcast(MessageHelper.Messages.Disconnect, string.Empty);
 
                 _cancelClose = false;
 
@@ -1157,45 +1159,13 @@ public partial class MainForm : Form
             }
         }
 
-        /// <summary>
-        ///     ВСЕМ активным без исключений
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="additional"></param>
-        public void SendMessageAllAttached(MessageHelper.Messages message, string additional)
-        {
-            try
-            {
-                foreach (var nameClient in _attachedUsers.Keys)
-                    ((UserConnection) _attachedUsers[nameClient]).SendMessage(message, additional);
-            }
-            catch (Exception e)
-            {
-                ReportAnError(e, " SendMessageALLActive");
-                if (_debug)
-                    throw;
-            }
-        }
-
-        #region Отправка сообщения с сервера
-        private void SendServerMessage(MessageHelper.Messages message, string additional)
-        {
-            var ic = _mainChatUsers.Keys;
-            foreach (string nameClient in ic)
-                ((UserConnection) _mainChatUsers[nameClient]).SendMessage(message, additional);
-        }
-        #endregion
-
-        public void ServerSay(string tirade)
-        {
-            SendServerMessage(MessageHelper.Messages.Server, tirade);
-        }
+        // Messaging helpers moved to MessageService
 
         public void SendMessageText()
         {
             if (!ChatAddOwnerMessage(MessageText.Text)) return;
-            ServerSay(MessageText.Text);
-            MessageText.Text = "";
+            _messageService.ServerBroadcast(MessageText.Text);
+            MessageText.Text = string.Empty;
         }
         //receive message from client
         private void OnClientReceive(UserConnection sender, string message)

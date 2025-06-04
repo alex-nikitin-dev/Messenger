@@ -239,7 +239,7 @@
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "About";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.OnAboutClick);
             // 
             // MChatUserView
             // 
@@ -326,7 +326,7 @@
             this.ChatContext.Name = "ChatContext";
             this.ChatContext.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
             this.ChatContext.Size = new System.Drawing.Size(252, 120);
-            this.ChatContext.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.ChatContext_Closed);
+            this.ChatContext.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.OnChatContextClosed);
             // 
             // CC_NIK
             // 
@@ -349,21 +349,21 @@
             this.CC_NikToChat.Size = new System.Drawing.Size(251, 22);
             this.CC_NikToChat.Text = "Ник в чат";
             this.CC_NikToChat.Visible = false;
-            this.CC_NikToChat.Click += new System.EventHandler(this.CC_NikToChat_Click);
+            this.CC_NikToChat.Click += new System.EventHandler(this.OnNikToChatClick);
             // 
             // CC_Clear
             // 
             this.CC_Clear.Name = "CC_Clear";
             this.CC_Clear.Size = new System.Drawing.Size(251, 22);
             this.CC_Clear.Text = "Очистить окно сообщений";
-            this.CC_Clear.Click += new System.EventHandler(this.CC_Clear_Click);
+            this.CC_Clear.Click += new System.EventHandler(this.OnClearClick);
             // 
             // CC_Expand
             // 
             this.CC_Expand.Name = "CC_Expand";
             this.CC_Expand.Size = new System.Drawing.Size(251, 22);
             this.CC_Expand.Text = "Спрятать список пользователей";
-            this.CC_Expand.Click += new System.EventHandler(this.CC_Expand_Click);
+            this.CC_Expand.Click += new System.EventHandler(this.OnExpandClick);
             // 
             // CC_AutoScroll
             // 
@@ -372,7 +372,7 @@
             this.CC_AutoScroll.Name = "CC_AutoScroll";
             this.CC_AutoScroll.Size = new System.Drawing.Size(251, 22);
             this.CC_AutoScroll.Text = "Автопрокрутка чата";
-            this.CC_AutoScroll.Click += new System.EventHandler(this.CC_AutoScroll_Click);
+            this.CC_AutoScroll.Click += new System.EventHandler(this.OnAutoScrollClick);
             // 
             // UserListTab
             // 
@@ -429,7 +429,7 @@
             this.MCLC_Ban.Name = "MCLC_Ban";
             this.MCLC_Ban.Size = new System.Drawing.Size(195, 22);
             this.MCLC_Ban.Text = "Ban";
-            this.MCLC_Ban.Click += new System.EventHandler(this.MCLC_Ban_Click);
+            this.MCLC_Ban.Click += new System.EventHandler(this.OnMclcBanClick);
             // 
             // AttachedUsersTab
             // 
@@ -687,28 +687,28 @@
             this.Ban_Delete.Name = "Ban_Delete";
             this.Ban_Delete.Size = new System.Drawing.Size(195, 22);
             this.Ban_Delete.Text = "Delete";
-            this.Ban_Delete.Click += new System.EventHandler(this.Ban_Delete_Click);
+            this.Ban_Delete.Click += new System.EventHandler(this.OnBanDeleteClick);
             // 
             // Ban_Set_ByIP
             // 
             this.Ban_Set_ByIP.Name = "Ban_Set_ByIP";
             this.Ban_Set_ByIP.Size = new System.Drawing.Size(195, 22);
             this.Ban_Set_ByIP.Text = "By IP";
-            this.Ban_Set_ByIP.Click += new System.EventHandler(this.Ban_Set_ByIP_Click);
+            this.Ban_Set_ByIP.Click += new System.EventHandler(this.OnBanByIpClick);
             // 
             // Ban_AddUser
             // 
             this.Ban_AddUser.Name = "Ban_AddUser";
             this.Ban_AddUser.Size = new System.Drawing.Size(195, 22);
             this.Ban_AddUser.Text = "Add User";
-            this.Ban_AddUser.Click += new System.EventHandler(this.Ban_AddUser_Click);
+            this.Ban_AddUser.Click += new System.EventHandler(this.OnBanAddUserClick);
             // 
             // Ban_Edit
             // 
             this.Ban_Edit.Name = "Ban_Edit";
             this.Ban_Edit.Size = new System.Drawing.Size(195, 22);
             this.Ban_Edit.Text = "Edit";
-            this.Ban_Edit.Click += new System.EventHandler(this.Ban_Edit_Click);
+            this.Ban_Edit.Click += new System.EventHandler(this.OnBanEditClick);
             // 
             // BanView
             // 
@@ -785,7 +785,7 @@
             this.MessageText.Size = new System.Drawing.Size(974, 65);
             this.MessageText.TabIndex = 7;
             this.MessageText.Text = "";
-            this.MessageText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MessageText_KeyDown);
+            this.MessageText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnMessageTextKeyDown);
             // 
             // MainSplit
             // 
