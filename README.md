@@ -7,8 +7,8 @@ network.
 
 ## Prerequisites
 
-- Windows with [.NET Framework&nbsp;4.7.1](https://dotnet.microsoft.com/download/dotnet-framework/net471) or later
-- [Visual&nbsp;Studio&nbsp;2017](https://visualstudio.microsoft.com/) or newer (includes MSBuild)
+- Windows with [.NET&nbsp;9.0](https://dotnet.microsoft.com/) installed
+- [Visual&nbsp;Studio](https://visualstudio.microsoft.com/) 2024 or newer (includes MSBuild)
 
 ## Build
 
