@@ -75,7 +75,7 @@ namespace MessengerServer
                 MessageBox.Show(@"Non selection for update", @"Messenger Server", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-            if (!_Text.ConteinsNotSpaces(txtReason.Text))
+            if (!TextOperations.TextHelper.ContainsNotSpaces(txtReason.Text))
             {
                 MessageBox.Show(@"Reason field can not be empty", @"Messenger Server", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
@@ -110,7 +110,7 @@ namespace MessengerServer
         {
             try
             {
-                if (!_Text.ConteinsNotSpaces(txtReason.Text))
+                if (!TextOperations.TextHelper.ContainsNotSpaces(txtReason.Text))
                 {
                     MessageBox.Show(@"Reason field can not be empty", @"Messenger Server", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;

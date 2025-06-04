@@ -13,4 +13,42 @@
     <FallbackCulture>en-US</FallbackCulture>
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Update="AboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="AddContact.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Alert.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="FindUserForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="MainChat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="MsgBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Options.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="PChatOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="PrivateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="RegistrationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Watch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
 </Project>

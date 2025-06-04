@@ -1,3 +1,4 @@
+using ServerInterfaceLib;
 using System.Collections.Generic;
 
 namespace MessengerServer;
@@ -5,6 +6,7 @@ namespace MessengerServer;
 internal interface IMessageService
 {
     void Broadcast(MessageHelper.Messages message, string payload);
+    //void Broadcast(MessageHelper.Messages disconnect, string empty);
     void SendToMainChat(MessageHelper.Messages message, string payload);
     void ServerBroadcast(string text);
 }

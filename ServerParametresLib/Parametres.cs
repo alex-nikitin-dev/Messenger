@@ -1,8 +1,9 @@
+using ErrorsProcessingLib;
 using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
-using ErrorsProcessingLib;
+using System.Text.Json;
 
 namespace ServerParametresLib;
 
@@ -54,9 +55,8 @@ public class Parametres
     {
         try
         {
-            using var fs = new FileStream(_path, FileMode.Create, FileAccess.Write);
-            var bf = new BinaryFormatter();
-            bf.Serialize(fs, Params);
+            string json = JsonSerializer.Serialize(Params);
+            File.WriteAllText(_path, json);
         }
         catch (Exception e)
         {
@@ -86,9 +86,8 @@ public class Parametres
                 }
             }
 
-            var bf = new BinaryFormatter();
-            var result = (ParamsStruct)bf.Deserialize(fs);
-            fs.Close();
+            string json = File.ReadAllText(_path);
+            ParamsStruct result = JsonSerializer.Deserialize<ParamsStruct>(json);
             return result;
         }
         catch (Exception e)

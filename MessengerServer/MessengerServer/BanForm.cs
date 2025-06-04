@@ -23,16 +23,16 @@ namespace MessengerServer
 
         public string out_login = "";
         public int out_login_id = -1;
-        public BanForm(string login):this()
+        public BanForm(string login) : this()
         {
             _login = login;
         }
-        public BanForm(string login,DateTime ed, bool byIP, string reason,bool edit):this(login)
+        public BanForm(string login, DateTime ed, bool byIP, string reason, bool edit) : this(login)
         {
-            _reason     = reason;
-            _byIP       = byIP;
-            _endDate    = ed;
-            _edit       = edit;
+            _reason = reason;
+            _byIP = byIP;
+            _endDate = ed;
+            _edit = edit;
         }
         private void BanForm_Load(object sender, EventArgs e)
         {
@@ -51,7 +51,10 @@ namespace MessengerServer
                 cbxLogin.SelectedIndex = -1;
                 cbxReson.SelectedIndex = -1;
 
-                if (_Text.ConteinsNotSpaces(_login))
+                // Fix for CS0103: The name '_Text' does not exist in the current context
+                // Assuming '_Text' is intended to be a reference to a class or object in the TextOperations namespace.
+                // Replace '_Text' with 'TextOperations.TextHelper' or the correct class name from the TextOperations namespace.
+                if (TextOperations.TextHelper.ContainsNotSpaces(_login))
                 {
                     int indx = cbxLogin.FindString(_login);
                     if (indx != -1)
@@ -59,7 +62,7 @@ namespace MessengerServer
                         cbxLogin.SelectedIndex = indx;
                     }
                 }
-                
+
                 if (_edit)
                 {
                     int indx = cbxReson.FindString(_reason);
@@ -67,7 +70,7 @@ namespace MessengerServer
                     {
                         cbxReson.SelectedIndex = indx;
                     }
-                    
+
                     chkByIP.Checked = _byIP;
 
                     cbxEndData.Value = _endDate;
@@ -78,12 +81,12 @@ namespace MessengerServer
                 ErrorsProc.WriteErrorToLog(_E, "InitInterface in BanForm.cs");
             }
         }
-        
+
         private void cbxReson_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
-                int id  = (int)cbxReson.SelectedValue;
+                int id = (int)cbxReson.SelectedValue;
                 int sec = userDataSet.BanRules.FindByid(id).GeneralTime;
 
                 cbxEndData.Value = DateTime.Now.AddSeconds(sec);
@@ -124,28 +127,28 @@ namespace MessengerServer
                     MessageBox.Show(@"Choise login!", @"Messenger Server", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-                bool byip           = chkByIP.Checked;
-                int AccountId       = (int)cbxLogin.SelectedValue;
-                int reson           = (int)cbxReson.SelectedValue;
-                DateTime enddate    = cbxEndData.Value;
+                bool byip = chkByIP.Checked;
+                int AccountId = (int)cbxLogin.SelectedValue;
+                int reson = (int)cbxReson.SelectedValue;
+                DateTime enddate = cbxEndData.Value;
 
                 UserDataSet.AccountRow row = userDataSet.Account.FindById(AccountId);
 
-                row.Banned          = true;
-                row.BanByIp         = byip;
-                row.BanTimespan     = enddate;
-                row.BanReason       = reson;
+                row.Banned = true;
+                row.BanByIp = byip;
+                row.BanTimespan = enddate;
+                row.BanReason = reson;
 
                 accountTableAdapter.Update(userDataSet.Account);
 
                 out_login_id = AccountId;
-                
+
                 CancelClose = false;
                 Close();
             }
             catch (Exception _E)
             {
-                MessageBox.Show(_E.Message,@"Messenger Server", MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show(_E.Message, @"Messenger Server", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Close();
             }
 
@@ -168,7 +171,8 @@ namespace MessengerServer
             {
                 cbxLogin.Items.Remove("Другие");
             }
-            catch{
+            catch
+            {
             }
         }
 

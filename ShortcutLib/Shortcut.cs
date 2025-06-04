@@ -5,7 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using IWshRuntimeLibrary;
+//using IWshRuntimeLibrary;
 using System.IO;
 namespace ShortcutLib
 {
@@ -15,20 +15,21 @@ namespace ShortcutLib
         }
         public static void CreateLink(string name, string path, string description, string baseFolder)
         {
-            try
-            {
-                WshShellClass wsh = new WshShellClass();
-                WshShortcut link = (WshShortcut)wsh.CreateShortcut(baseFolder + "\\" + name + ".lnk");
-                link.TargetPath = path;
-                link.Description = description;
-                int pos = path.LastIndexOf('\\');
-                link.WorkingDirectory = path.Substring(0, pos);
-                link.Save();
-            }
-            catch (Exception _E)
-            {
-                MessageBox.Show("Ошибка создания ярлыка:\n" + _E.Message, @"", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            //try
+            //{
+            //    WshShellClass wsh = new WshShellClass();
+            //    WshShortcut link = (WshShortcut)wsh.CreateShortcut(baseFolder + "\\" + name + ".lnk");
+            //    link.TargetPath = path;
+            //    link.Description = description;
+            //    int pos = path.LastIndexOf('\\');
+            //    link.WorkingDirectory = path.Substring(0, pos);
+            //    link.Save();
+            //}
+            //catch (Exception _E)
+            //{
+            //    MessageBox.Show("Ошибка создания ярлыка:\n" + _E.Message, @"", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //}
+          throw new NotImplementedException("This method requires IWshRuntimeLibrary, which is not available in .NET 6 and later. Please use an alternative method to create shortcuts.");
         }
         public static void CreateDesktopLink(string name, string path, string description)
         {

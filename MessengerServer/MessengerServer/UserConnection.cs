@@ -72,7 +72,7 @@ namespace MessengerServer
             get => _name;
             set
             {
-                if (_Text.IsEmpty(value)) throw new ServerException(ServerException.Error.EmptyUserName);
+                if (string.IsNullOrEmpty(value)) throw new ServerException(ServerException.Error.EmptyUserName);
                 _name = value;
             }
         }
@@ -97,7 +97,7 @@ namespace MessengerServer
 
         public string Description { get; private set; }
 
-        public string Password { get; private set; } = "";
+        public string Password { get;  set; } = "";
 
         #endregion
 

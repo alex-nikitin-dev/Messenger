@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using ErrorsProcessingLib;
 using System.Drawing;
+using System.Text.Json;
 namespace ParametresLib
 {
     public class Parametres
@@ -84,15 +85,10 @@ namespace ParametresLib
         {
             try
             {
-                FileStream fs = new FileStream(Path,FileMode.Create,FileAccess.Write);
-
-                BinaryFormatter bf = new BinaryFormatter();
-
-                bf.Serialize(fs,Params);
-
-                fs.Close();
+                string json = JsonSerializer.Serialize(Params); // Serialize Params to JSON
+                File.WriteAllText(Path, json); // Save JSON to file
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 ErrorsProc.WriteErrorAndMessage(e, "Save in Parametres.cs", _debug);
             }
@@ -105,34 +101,22 @@ namespace ParametresLib
         {
             try
             {
-                FileStream fs = null;
-                while (fs == null)
+                if (!File.Exists(Path))
                 {
-                    try
-                    {
-                        fs = new FileStream(Path, FileMode.Open, FileAccess.Read);
-                    }
-                    catch (FileNotFoundException e)
-                    {
-                        ErrorsProc.WriteErrorAndMessage(e, "Load in Parametres.cs", false);
+                    ErrorsProc.WriteErrorAndMessage(new FileNotFoundException(), "Load in Parametres.cs", false);
 
-                        Parametres prm = new Parametres(ParamsDefault);
-                        
-                        prm.Save();
-                        
-                    }
+                    Parametres prm = new Parametres(ParamsDefault);
+                    prm.Save();
                 }
-                BinaryFormatter bf = new BinaryFormatter();
 
-                ParamsStruct value = (ParamsStruct)bf.Deserialize(fs);
-
-                fs.Close();
+                string json = File.ReadAllText(Path);
+                ParamsStruct value = JsonSerializer.Deserialize<ParamsStruct>(json);
 
                 return value;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                //ErrorsProc.WriteErrorAndMessage(e, "Load in Parametres.cs", _debug);
+                ErrorsProc.WriteErrorAndMessage(e, "Load in Parametres.cs", _debug);
                 return ParamsDefault;
             }
         }

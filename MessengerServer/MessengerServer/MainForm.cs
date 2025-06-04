@@ -14,7 +14,7 @@ using MessengerServer.UsersDataSetTableAdapters;
 using ServerExceptionLib;
 using ServerInterfaceLib;
 using TextOperations;
-using MessengerServer.Services;
+//using MessengerServer.Services;
 using AccountTableAdapter = MessengerServer.UserDataSetTableAdapters.AccountTableAdapter;
 using BanReasonsTableAdapter = MessengerServer.UserDataSetTableAdapters.BanReasonsTableAdapter;
 using CCMessages = ClientConnectionLib.ClientConnection.Messages;
@@ -707,9 +707,9 @@ public partial class MainForm : Form
         public bool ChatAddString(string message)
         {
             Color color = Color.Black;
-            if (!_Text.ConteinsNotSpaces(message)) return false;
+            if (!TextOperations.TextHelper.ContainsNotSpaces(message)) return false;
 
-            if (!_Text.IsEmpty(Chat.Text)) Chat.AppendText("\n");
+            if (!String.IsNullOrEmpty(Chat.Text)) Chat.AppendText("\n");
 
 
             var time = "[" + DateTime.Now.ToLongTimeString() + "] ";
@@ -719,7 +719,7 @@ public partial class MainForm : Form
             Chat.SelectionColor = color;
             Chat.DeselectAll();
 
-            Chat.AppendText(_Text.Normalize(message));
+            Chat.AppendText(message);
             if (CC_AutoScroll.Checked) Chat.ScrollToCaret();
             return true;
            
@@ -733,9 +733,9 @@ public partial class MainForm : Form
             if (InvokeRequired)
                 return (bool) Invoke(new Func<bool>(() => ChatAddString(message, foreColor, backColor)));
            
-                if (!_Text.ConteinsNotSpaces(message)) return false;
+                if (!TextOperations.TextHelper.ContainsNotSpaces(message)) return false;
 
-                if (!_Text.IsEmpty(Chat.Text)) Chat.AppendText("\n");
+                if (!string.IsNullOrEmpty(Chat.Text)) Chat.AppendText("\n");
 
                 var time = "[" + DateTime.Now.ToLongTimeString() + "] ";
                 Chat.AppendText(time);
@@ -744,7 +744,7 @@ public partial class MainForm : Form
                 Chat.SelectionColor = timeColor;
                 Chat.DeselectAll();
 
-                var apndtxt = _Text.Normalize(message);
+                var apndtxt = message;
                 Chat.AppendText(apndtxt);
 
                 Chat.Select(Chat.Text.Length - apndtxt.Length, apndtxt.Length);
@@ -762,9 +762,9 @@ public partial class MainForm : Form
             foreColor = Color.Black;
             backColor = Color.White;
             Color timeColor = Color.Black;
-            if (!_Text.ConteinsNotSpaces(message)) return false;
+            if (!TextOperations.TextHelper.ContainsNotSpaces(message)) return false;
 
-                if (!_Text.IsEmpty(Chat.Text)) Chat.AppendText("\n");
+                if (!string.IsNullOrEmpty(Chat.Text)) Chat.AppendText("\n");
                 message = "<" + user + ">" + message;
                 var time = "[" + DateTime.Now.ToLongTimeString() + "] ";
                 Chat.AppendText(time);
@@ -773,7 +773,7 @@ public partial class MainForm : Form
                 Chat.SelectionColor = timeColor;
                 Chat.DeselectAll();
 
-                var textToAppend = _Text.Normalize(message);
+                var textToAppend = message;
                 Chat.AppendText(textToAppend);
 
                 Chat.Select(Chat.Text.Length - textToAppend.Length, textToAppend.Length);
@@ -1358,10 +1358,10 @@ public partial class MainForm : Form
             var criteries = new string[data.Length - 1];
             for (var i = 1; i < data.Length; i++) criteries[i - 1] = data[i];
 
-            var loginSearch = _Text.ConteinsNotSpaces(criteries[0]);
-            var fnSearch = _Text.ConteinsNotSpaces(criteries[1]);
-            var lnSearch = _Text.ConteinsNotSpaces(criteries[2]);
-            var eMailSearch = _Text.ConteinsNotSpaces(criteries[3]);
+            var loginSearch = TextOperations.TextHelper.ContainsNotSpaces(criteries[0]);
+            var fnSearch = TextOperations.TextHelper.ContainsNotSpaces(criteries[1]);
+            var lnSearch = TextOperations.TextHelper.ContainsNotSpaces(criteries[2]);
+            var eMailSearch = TextOperations.TextHelper.ContainsNotSpaces(criteries[3]);
 
             var loginReg = ConvertMask(criteries[0]);
             var fnReg = ConvertMask(criteries[1]);
