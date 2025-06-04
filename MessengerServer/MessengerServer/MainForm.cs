@@ -939,10 +939,16 @@ namespace MessengerServer
                     return false;
                 }
 
-                userName = _accountTable.FindById(id).Login;
+                var row = _accountTable.FindById(id);
+                userName = row.Login;
 
-                if (string.Compare(GetPasswordById(id), password, StringComparison.Ordinal) == 0)
+                if (PasswordHelper.VerifyPassword(password, row.Password, out var migrated))
                 {
+                    if (migrated != row.Password)
+                    {
+                        row.Password = migrated;
+                        _accountAdapter.Update(_accountTable);
+                    }
                     AttachUser(userName, sender);
                     return true;
                 }
@@ -1889,10 +1895,18 @@ namespace MessengerServer
 
                 var user = (UserConnection) _attachedUsers[login];
                 // проверка на хак
-                if (String.Compare(user.Password, password, StringComparison.Ordinal) != 0)
+                if (!PasswordHelper.VerifyPassword(password, user.Password, out var migrated))
                 {
                     sender.SendMessage(MessageHelper.Messages.RegistrationFailedDefault);
                     return;
+                }
+
+                if (migrated != user.Password)
+                {
+                    var rowUpd = _accountTable.FindById(user.Id);
+                    rowUpd.Password = migrated;
+                    _accountAdapter.Update(_accountTable);
+                    user.Password = migrated;
                 }
 
                 var row = _accountTable.FindById(user.Id);
@@ -1997,10 +2011,18 @@ namespace MessengerServer
 
                     var user = (UserConnection) _attachedUsers[login];
                     // проверка на хак
-                    if (string.Compare(user.Password, password, StringComparison.Ordinal) != 0)
+                    if (!PasswordHelper.VerifyPassword(password, user.Password, out var migrated))
                     {
                         sender.SendMessage(MessageHelper.Messages.RegistrationFailedDefault);
                         return;
+                    }
+
+                    if (migrated != user.Password)
+                    {
+                        var rowUpd = _accountTable.FindById(user.Id);
+                        rowUpd.Password = migrated;
+                        _accountAdapter.Update(_accountTable);
+                        user.Password = migrated;
                     }
 
                     senderUser.Add(user);
@@ -2110,8 +2132,10 @@ namespace MessengerServer
                 var br = bt.NewBanReasonsRow();
                 br.Reason = "";
 
+                var hashed = PasswordHelper.HashPassword(data[1]);
+
                 var row = _accountTable.AddAccountRow(data[0],
-                    data[1],
+                    hashed,
                     data[2],
                     data[3],
                     data[4],
@@ -2147,7 +2171,7 @@ namespace MessengerServer
                 var row = _accountTable.FindById(user.Id);
 
                 row.Login = sender.DataArray[0];
-                row.Password = sender.DataArray[1];
+                row.Password = PasswordHelper.HashPassword(sender.DataArray[1]);
                 row.Firstname = sender.DataArray[2];
                 row.Lastname = sender.DataArray[3];
                 row.Email = sender.DataArray[4];
