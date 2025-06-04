@@ -1611,6 +1611,7 @@ namespace Messenger_Client
             {
                 ConnectInterfaceEnable(false);
                 ConnectTimer.Start();
+                _progressCancel = false;
                 _progressThread = new Thread(DoConnectProgress);
                 _progressThread.Start();
                 return true;
@@ -1623,6 +1624,7 @@ namespace Messenger_Client
         }
 
         private Thread _progressThread;
+        private volatile bool _progressCancel;
 
         private readonly string[] _progressText =
         {
@@ -1632,29 +1634,33 @@ namespace Messenger_Client
 
         private void DoConnectProgress()
         {
-            while (true)
+            while (!_progressCancel)
+            {
                 foreach (var t in _progressText)
+                {
+                    if (_progressCancel) break;
                     try
                     {
                         StatusInfo.Text = @"Соединение " + t;
-
                         Thread.Sleep(150);
                     }
                     catch (Exception e)
                     {
-                        ErrorsProc.WriteErrorToLog(e,"");
+                        ErrorsProc.WriteErrorToLog(e, "");
                     }
+                }
+            }
             // ReSharper disable once FunctionNeverReturns
         }
 
         private void ProgressThreadTerminate(string statusInfo)
         {
-            if (_progressThread != null)
-                if (_progressThread.IsAlive)
-                {
-                    _progressThread.Abort();
-                    _progressThread = null;
-                }
+            _progressCancel = true;
+            if (_progressThread != null && _progressThread.IsAlive)
+            {
+                _progressThread.Join(200);
+                _progressThread = null;
+            }
 
             StatusInfo.Text = statusInfo;
         }
