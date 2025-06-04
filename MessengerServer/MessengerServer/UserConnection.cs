@@ -8,6 +8,7 @@ using System.Threading;
 using System.Windows.Forms;
 using ErrorsProcessingLib;
 using MessengerServer.UserDataSetTableAdapters;
+using MessengerServer.Data;
 using TextOperations;
 using ServerExceptionLib;
 using ServerInterfaceLib;
@@ -111,44 +112,37 @@ namespace MessengerServer
         {
             try
             {
-                var ds = new UserDataSet.AccountDataTable();
-                var adapter = new AccountTableAdapter();
-
-                adapter.Fill(ds);
-                var id = FindUserPosition(_name, ds);
-                if (id == -1)
+                var repo = new OleDbAccountRepository(Properties.Settings.Default.UserConnectionString);
+                var account = repo.GetByLogin(_name);
+                if (account == null)
                 {
-                    _name = "";
+                    _name = string.Empty;
                     IsAttached = false;
                     throw new ServerException(ServerException.Error.WrongUserInit);
                 }
 
-                if (id > -1)
+                Id = account.Id;
+                FistName = account.FirstName;
+                LastName = account.LastName;
+                Email = account.Email;
+                Description = account.Description;
+                Password = account.Password;
+
+                try
                 {
-                    var row = (UserDataSet.AccountRow) ds.Rows[id];
-                    Id = row.Id;
-                    FistName = row.Firstname;
-                    LastName = row.Lastname;
-                    Email = row.Email;
-                    Description = row.Description;
-                    Password = row.Password;
-
-                    try
+                    var oldIp = account.IP;
+                    if (!string.Equals(oldIp, Ip.ToString(), StringComparison.Ordinal))
                     {
-                        var oldIp = row.IP;
-
-                        row.IP = Ip.ToString();
-                        adapter.Update(ds);
-                        if (string.Compare(oldIp, row.IP, StringComparison.Ordinal) != 0)
-                            ReplaceUserIpEvent?.Invoke(this, oldIp, row.IP);
-                    }
-                    catch (Exception e)
-                    {
-                        ErrorsProc.WriteErrorToLog(e, "FillData (Set IP in AccountTable) in UserConnection.cs");
+                        repo.UpdateIp(account.Id, Ip.ToString());
+                        ReplaceUserIpEvent?.Invoke(this, oldIp, Ip.ToString());
                     }
                 }
+                catch (Exception e)
+                {
+                    ErrorsProc.WriteErrorToLog(e, "FillData (Set IP in Account) in UserConnection.cs");
+                }
 
-                BW_Fill(ds);
+                BW_Fill(new UserDataSet.AccountDataTable());
             }
             catch (Exception e)
             {
@@ -162,16 +156,10 @@ namespace MessengerServer
         {
             try
             {
-                var wt = new UserDataSet.WhiteDataTable();
-                var wa = new WhiteTableAdapter();
-
-                wa.Fill(wt);
-
+                var repo = new OleDbAccountRepository(Properties.Settings.Default.UserConnectionString);
                 White.Clear();
-
-                foreach (var row in wt)
-                    if (row.Login == Id)
-                        White.Add(at.FindById(row.Friend).Login);
+                foreach (var login in repo.GetWhiteList(Id))
+                    White.Add(login);
             }
             catch (Exception e)
             {
@@ -184,16 +172,10 @@ namespace MessengerServer
         {
             try
             {
-                var bt = new UserDataSet.BlackDataTable();
-                var ba = new BlackTableAdapter();
-
-                ba.Fill(bt);
-
+                var repo = new OleDbAccountRepository(Properties.Settings.Default.UserConnectionString);
                 Black.Clear();
-
-                foreach (var row in bt)
-                    if (row.Login == Id)
-                        Black.Add(at.FindById(row.Enemy).Login);
+                foreach (var login in repo.GetBlackList(Id))
+                    Black.Add(login);
             }
             catch (Exception e)
             {
@@ -218,24 +200,7 @@ namespace MessengerServer
 
         #endregion
 
-        private int FindUserPosition(string login, UserDataSet.AccountDataTable accountTable)
-        {
-            try
-            {
-                for (var i = 0; i < accountTable.Rows.Count; i++)
-                {
-                    var row = (UserDataSet.AccountRow) accountTable.Rows[i];
-                    if (string.Compare(row.Login, login, StringComparison.OrdinalIgnoreCase) == 0) return i;
-                }
-
-                return -1;
-            }
-            catch (Exception e)
-            {
-                ErrorsProc.WriteErrorAndMessage(e, "FindUserPosition in UserConnection.cs", true);
-                return -2;
-            }
-        }
+        private int FindUserPosition(string login, UserDataSet.AccountDataTable accountTable) => -1;
 
         #endregion
 
