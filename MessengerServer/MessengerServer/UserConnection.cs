@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using ErrorsProcessingLib;
-using MessengerServer.UserDataSetTableAdapters;
 using MessengerServer.Data;
 using TextOperations;
 using ServerExceptionLib;
@@ -112,7 +111,7 @@ namespace MessengerServer
         {
             try
             {
-                var repo = new OleDbAccountRepository(Properties.Settings.Default.UserConnectionString);
+                var repo = new OdbcAccountRepository(Properties.Settings.Default.UserConnectionString);
                 var account = repo.GetByLogin(_name);
                 if (account == null)
                 {
@@ -142,7 +141,7 @@ namespace MessengerServer
                     ErrorsProc.WriteErrorToLog(e, "FillData (Set IP in Account) in UserConnection.cs");
                 }
 
-                BW_Fill(new UserDataSet.AccountDataTable());
+                BW_Fill();
             }
             catch (Exception e)
             {
@@ -152,11 +151,11 @@ namespace MessengerServer
 
         #region Заполнение белого и чёрного списков
 
-        public void WhiteListFill(UserDataSet.AccountDataTable at)
+        public void WhiteListFill()
         {
             try
             {
-                var repo = new OleDbAccountRepository(Properties.Settings.Default.UserConnectionString);
+                var repo = new OdbcAccountRepository(Properties.Settings.Default.UserConnectionString);
                 White.Clear();
                 foreach (var login in repo.GetWhiteList(Id))
                     White.Add(login);
@@ -164,15 +163,15 @@ namespace MessengerServer
             catch (Exception e)
             {
                 ErrorsProc.WriteErrorAndMessage(e,
-                    "WhiteListFill(UserDataSet.AccountDataTable at) in UserConnection.cs", _debug);
+                    "WhiteListFill() in UserConnection.cs", _debug);
             }
         }
 
-        public void BlackListFill(UserDataSet.AccountDataTable at)
+        public void BlackListFill()
         {
             try
             {
-                var repo = new OleDbAccountRepository(Properties.Settings.Default.UserConnectionString);
+                var repo = new OdbcAccountRepository(Properties.Settings.Default.UserConnectionString);
                 Black.Clear();
                 foreach (var login in repo.GetBlackList(Id))
                     Black.Add(login);
@@ -180,27 +179,27 @@ namespace MessengerServer
             catch (Exception e)
             {
                 ErrorsProc.WriteErrorAndMessage(e,
-                    "BlackListFill(UserDataSet.AccountDataTable at) in UserConnection.cs", _debug);
+                    "BlackListFill() in UserConnection.cs", _debug);
             }
         }
 
-        public void BW_Fill(UserDataSet.AccountDataTable at)
+        public void BW_Fill()
         {
             try
             {
-                WhiteListFill(at);
-                BlackListFill(at);
+                WhiteListFill();
+                BlackListFill();
             }
             catch (Exception e)
             {
-                ErrorsProc.WriteErrorAndMessage(e, "BW_Fill(UserDataSet.AccountDataTable at) in UserConnection.cs",
+                ErrorsProc.WriteErrorAndMessage(e, "BW_Fill() in UserConnection.cs",
                     _debug);
             }
         }
 
         #endregion
 
-        private int FindUserPosition(string login, UserDataSet.AccountDataTable accountTable) => -1;
+
 
         #endregion
 

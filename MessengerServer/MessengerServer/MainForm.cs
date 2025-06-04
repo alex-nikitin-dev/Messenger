@@ -10,7 +10,6 @@ using System.Threading;
 using System.Windows.Forms;
 using ErrorsProcessingLib;
 using MessengerServer.UserDataSetTableAdapters;
-using MessengerServer.UsersDataSetTableAdapters;
 using ServerExceptionLib;
 using ServerInterfaceLib;
 using TextOperations;
