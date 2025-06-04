@@ -1,16 +1,24 @@
-using System.Collections;
+using System.Collections.Generic;
 
 namespace MessengerServer;
+
+internal interface IMessageService
+{
+    void Broadcast(MessageHelper.Messages message, string payload);
+    void SendToMainChat(MessageHelper.Messages message, string payload);
+    void ServerBroadcast(string text);
+}
 
 /// <summary>
 /// Provides high level messaging methods for broadcasting to connected users.
 /// </summary>
-internal sealed class MessageService
+internal sealed class MessageService : IMessageService
 {
-    private readonly Hashtable _mainChatUsers;
-    private readonly Hashtable _attachedUsers;
+    private readonly IDictionary<string, UserConnection> _mainChatUsers;
+    private readonly IDictionary<string, UserConnection> _attachedUsers;
 
-    public MessageService(Hashtable mainChatUsers, Hashtable attachedUsers)
+    public MessageService(IDictionary<string, UserConnection> mainChatUsers,
+        IDictionary<string, UserConnection> attachedUsers)
     {
         _mainChatUsers = mainChatUsers;
         _attachedUsers = attachedUsers;
@@ -21,9 +29,8 @@ internal sealed class MessageService
     /// </summary>
     public void Broadcast(MessageHelper.Messages message, string payload)
     {
-        foreach (string clientName in _attachedUsers.Keys)
+        foreach (var connection in _attachedUsers.Values)
         {
-            var connection = (UserConnection)_attachedUsers[clientName];
             connection.SendMessage(message, payload);
         }
     }
@@ -33,9 +40,8 @@ internal sealed class MessageService
     /// </summary>
     public void SendToMainChat(MessageHelper.Messages message, string payload)
     {
-        foreach (string clientName in _mainChatUsers.Keys)
+        foreach (var connection in _mainChatUsers.Values)
         {
-            var connection = (UserConnection)_mainChatUsers[clientName];
             connection.SendMessage(message, payload);
         }
     }

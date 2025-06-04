@@ -172,10 +172,10 @@ public partial class MainForm : Form
                     if (_debug) throw;
                 }
 
-                if (_mainChatUsers.Contains(row.Login))
+                if (_mainChatUsers.ContainsKey(row.Login))
                 {
                     var sDt = $"{row.BanTimespan:dd.MM.yyyy HH:mm:ss}";
-                    var user = (UserConnection) _mainChatUsers[row.Login];
+                    var user = _mainChatUsers[row.Login];
 
                     user.SendMessage(MessageHelper.Messages.MchatBan, reason, sDt);
                     user.IsMChatActive = false;
@@ -271,10 +271,10 @@ public partial class MainForm : Form
                     if (_debug) throw;
                 }
 
-                if (_mainChatUsers.Contains(row.Login))
+                if (_mainChatUsers.ContainsKey(row.Login))
                 {
                     var sDt = $"{row.BanTimespan:dd.MM.yyyy HH:mm:ss}";
-                    var user = (UserConnection) _mainChatUsers[row.Login];
+                    var user = _mainChatUsers[row.Login];
 
                     user.SendMessage(MessageHelper.Messages.MchatBan, reason, sDt);
                     user.IsMChatActive = false;
@@ -327,7 +327,8 @@ public partial class MainForm : Form
                 if (AttachedUsersView.SelectedItems.Count != 0)
                 {
                     var login = AttachedUsersView.SelectedItems[0].Text;
-                    (_attachedUsers[login] as UserConnection)?.ShutDown();
+                    if (_attachedUsers.TryGetValue(login, out var connection))
+                        connection.ShutDown();
                 }
             }
             catch (Exception exception)
@@ -357,9 +358,9 @@ public partial class MainForm : Form
         private readonly int UserData_RowCount = 6;
         private ParamsStruct _params;
 
-        private readonly Hashtable _mainChatUsers = new Hashtable();
-        private readonly Hashtable _attachedUsers = new Hashtable();
-        private readonly MessageService _messageService;
+        private readonly Dictionary<string, UserConnection> _mainChatUsers = new();
+        private readonly Dictionary<string, UserConnection> _attachedUsers = new();
+        private readonly IMessageService _messageService;
 
         private readonly UserDataSet.AccountDataTable _accountTable = new UserDataSet.AccountDataTable();
         private readonly AccountTableAdapter _accountAdapter = new AccountTableAdapter();
@@ -939,23 +940,24 @@ public partial class MainForm : Form
             return _accountTable.FindById(id).Password;
         }
 
-        private string AttachedUsers_Contains(object key)
+        private string FindAttachedUser(string login)
         {
 #if !DEBUG
-           try
-           {
+            try
+            {
 #endif
-            var name = ((string) key).ToLower();
-            foreach (var item in _attachedUsers.Keys)
-                if (String.Compare(((string) item).ToLower(), name, StringComparison.Ordinal) == 0)
-                    return item.ToString();
+            var target = login.ToLower();
+            foreach (var name in _attachedUsers.Keys)
+                if (string.Equals(name.ToLower(), target, StringComparison.Ordinal))
+                    return name;
 
-            return "";
+            return string.Empty;
 #if !DEBUG
-           }
-           catch{
-           return "";
-           }
+            }
+            catch
+            {
+                return string.Empty;
+            }
 #endif
         }
 
@@ -963,7 +965,7 @@ public partial class MainForm : Form
         {
             try
             {
-                if (AttachedUsers_Contains(userName) != "")
+                if (FindAttachedUser(userName) != string.Empty)
                 {
                     sender.SendMessage(MessageHelper.Messages.WasAttached);
                 }
@@ -1023,10 +1025,10 @@ public partial class MainForm : Form
 #if DEBUG
                     ChatAddComment("юзер нашёл себя добавленным в друзья к " + name);
 #endif
-                    var strong = AttachedUsers_Contains(name);
-                    if (strong != "")
+                    var strong = FindAttachedUser(name);
+                    if (strong != string.Empty)
                         if (!sender.Black.Contains(strong))
-                            Send_BW_State((UserConnection) _attachedUsers[strong], _params.BwDelay);
+                            Send_BW_State(_attachedUsers[strong], _params.BwDelay);
                 }
 #if !DEBUG
             }
@@ -1129,11 +1131,9 @@ public partial class MainForm : Form
         {
             try
             {
-                var ic = _mainChatUsers.Keys;
-
-                foreach (string nameClient in ic)
+                foreach (var nameClient in _mainChatUsers.Keys)
                     if (nameClient != sender.Name)
-                        ((UserConnection) _mainChatUsers[nameClient]).SendMessage(message, additional);
+                        _mainChatUsers[nameClient].SendMessage(message, additional);
             }
             catch (Exception e)
             {
@@ -1151,7 +1151,7 @@ public partial class MainForm : Form
             try
             {
                 foreach (var nameClient in _mainChatUsers.Keys)
-                    ((UserConnection) _mainChatUsers[nameClient]).SendMessage(message, additional);
+                    _mainChatUsers[nameClient].SendMessage(message, additional);
             }
             catch (Exception e)
             {
@@ -1328,7 +1328,7 @@ public partial class MainForm : Form
 
                 try
                 {
-                    var toUser = (UserConnection) _attachedUsers[pvtData[0]];
+                    var toUser = _attachedUsers[pvtData[0]];
                     if (!toUser.Black.Contains(sender.Name))
                         toUser.SendMessage(MessageHelper.Messages.Private, 10, sender.Name, pvtData[1], pvtData[2],
                             pvtData[3], pvtData[4]);
@@ -1433,9 +1433,9 @@ public partial class MainForm : Form
             var data = new ArrayList();
             var userArrayList = groupType == UserGroupType.White ? sender.White : sender.Black;
             foreach (string login in userArrayList)
-                if (AttachedUsers_Contains(login) != "" && VerifyId(sender.Id, login))
+                if (FindAttachedUser(login) != string.Empty && VerifyId(sender.Id, login))
                 {
-                    var userState = ((UserConnection)_attachedUsers[login]).CurrentState;
+                    var userState = _attachedUsers[login].CurrentState;
                     if (userState == State.Invisible) userState = State.Off;
                     data.Add(login + "&" + Enum.GetName(typeof(State), userState));
                 }
@@ -1622,11 +1622,11 @@ public partial class MainForm : Form
 
         public bool TrySendAlert(string login, string guest)
         {
-            var strong = AttachedUsers_Contains(login);
+            var strong = FindAttachedUser(login);
 
-            if (strong != "")
+            if (strong != string.Empty)
             {
-                ((UserConnection) _attachedUsers[strong]).SendMessage(MessageHelper.Messages.Alert, guest);
+                _attachedUsers[strong].SendMessage(MessageHelper.Messages.Alert, guest);
                 return true;
             }
 
@@ -1653,8 +1653,8 @@ public partial class MainForm : Form
                         {
                             _whiteTable.AddWhiteRow(sender.Id, fId);
                             DeleteFromBlack(sender.Id, fId);
-                            if (AttachedUsers_Contains(logins[i]) != "")
-                                Send_BW_State((UserConnection) _attachedUsers[logins[i]], _params.BwDelay);
+                            if (FindAttachedUser(logins[i]) != string.Empty)
+                                Send_BW_State(_attachedUsers[logins[i]], _params.BwDelay);
                         }
                         else if (wId > -1)
                         {
@@ -1722,8 +1722,8 @@ public partial class MainForm : Form
                     {
                         _blackTable.AddBlackRow(sender.Id, eId);
                         DeleteFromWhite(sender.Id, eId);
-                        if (AttachedUsers_Contains(login) != "")
-                            Send_BW_State((UserConnection) _attachedUsers[login], _params.BwDelay);
+                        if (FindAttachedUser(login) != string.Empty)
+                            Send_BW_State(_attachedUsers[login], _params.BwDelay);
                     }
                     else if (eId > -1)
                     {
@@ -1750,9 +1750,9 @@ public partial class MainForm : Form
                     _blackAdapter.Update(_blackTable);
 
                     var login = _accountTable.FindById(isOwner).Login;
-                    if (AttachedUsers_Contains(login) != "")
+                    if (FindAttachedUser(login) != string.Empty)
                     {
-                        var user = (UserConnection) _attachedUsers[login];
+                        var user = _attachedUsers[login];
                         user.BW_Fill(_accountTable);
                     }
                 }
@@ -1838,15 +1838,15 @@ public partial class MainForm : Form
         {
             try
             {
-                // какому юзеру
-                login = AttachedUsers_Contains(login);
+                // to which user
+                login = FindAttachedUser(login);
                 if (login == "")
                 {
                     sender.SendMessage(MessageHelper.Messages.RegistrationFailedDefault);
                     return;
                 }
 
-                var user = (UserConnection) _attachedUsers[login];
+                var user = _attachedUsers[login];
                 // проверка на хак
                 if (!PasswordHelper.VerifyPassword(password, user.Password, out var migrated))
                 {
@@ -1954,15 +1954,15 @@ public partial class MainForm : Form
                 {
                     var login = messages[1];
                     var password = messages[2];
-                    // какому юзеру
-                    login = AttachedUsers_Contains(login);
+                    // target user
+                    login = FindAttachedUser(login);
                     if (login == "")
                     {
                         sender.SendMessage(MessageHelper.Messages.RegistrationFailedDefault);
                         return;
                     }
 
-                    var user = (UserConnection) _attachedUsers[login];
+                    var user = _attachedUsers[login];
                     // проверка на хак
                     if (!PasswordHelper.VerifyPassword(password, user.Password, out var migrated))
                     {
@@ -2399,9 +2399,9 @@ public partial class MainForm : Form
         private (MessageHelper.Messages message,string additional) MChatUserStringCreate()
         {
             var reply = "";
-            foreach (DictionaryEntry entry in _mainChatUsers)
+            foreach (var entry in _mainChatUsers)
             {
-                var us = (UserConnection) entry.Value;
+                var us = entry.Value;
                 reply += us.Name;
                 reply += "&" + us.Description;
                 reply += "&" + us.Email;
